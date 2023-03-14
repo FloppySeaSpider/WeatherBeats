@@ -21,8 +21,6 @@ export default function Zipcode() {
 
   const updateWeatherAPI = async () => {
     // on-load, fetch weather data from the weather API
-    const body = JSON.stringify({ zip: zipcode });
-    console.log('body', body);
     const response = await fetch('http://localhost:3000/api/weather', {
       method: 'POST',
       headers: {
