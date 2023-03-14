@@ -42,25 +42,6 @@ export default function Zipcode() {
     updateWeatherAPI();
   }, []);
 
-  // on button click, fire reducers to update state and re-render page with new location
-
-  function getNewWeatherData(input) {
-    const body = JSON.stringify({ zip: input });
-    console.log('This is the body:', body);
-    fetch('/api/weather', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body
-    })
-      .then((response) => response.json())
-      .then((response) => dispatch(updateAll(response)))
-      .then((response) =>
-        console.log('This is the reponse after UpdateAll', response)
-      );
-  }
-
   return (
     <div className="column">
       <div className="box is-align-content-center is-justify-content-center">
@@ -86,10 +67,7 @@ export default function Zipcode() {
             </form>
           </div>
           <p className="control">
-            <a
-              className="button is-primary has-text-weight-bold is-size-4 has-text-light"
-              onClick={() => getNewWeatherData(location)}
-            >
+            <a className="button is-primary has-text-weight-bold is-size-4 has-text-light">
               Location
             </a>
           </p>
