@@ -9,7 +9,9 @@ require('dotenv').config();
 const app = express();
 const PORT = 3000;
 
+//Parsing JSON
 app.use(express.json());
+//Parsing URL encoded
 app.use(express.urlencoded({ extended: false }));
 // creating a session instance
 app.use(session({
