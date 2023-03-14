@@ -3,6 +3,7 @@ const session = require('express-session');
 const path = require('path');
 const authRoutes = require('./routes/authRouter');
 const weatherRouter = require('./routes/weatherRouter');
+const cors = require('cors');
 
 require('dotenv').config();
 
@@ -11,6 +12,7 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 // creating a session instance
 app.use(
   session({
@@ -30,7 +32,7 @@ app.use(express.static('public'));
 
 // Todo: get request for weather type
 app.use('/auth', authRoutes);
-app.use('/weather', weatherRouter);
+app.use('/api/weather', weatherRouter);
 
 app.get('/api/user', async (req, res) => {
   if (!req.session.user) {
@@ -47,7 +49,16 @@ app.get('/api/user', async (req, res) => {
 
 // added catch
 app.use('*', (req, res) => res.sendStatus(404));
-
+app.use((err, req, res, next) => {
+  const template = {
+    status: 500,
+    message: 'Error in middleware',
+    log: 'Error in middleware'
+  };
+  const errObj = Object.assign({}, template, err);
+  console.log(errObj.log);
+  return res.status(errObj.status).send(errObj.message);
+});
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`Server is running on port ${PORT}`);
