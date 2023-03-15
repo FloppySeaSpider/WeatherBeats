@@ -106,7 +106,7 @@ const stateSlice = createSlice({
         if (state.weather === 'clouds') {
           state.url = 'https://images.hdqwalls.com/wallpapers/sunny-fields.jpg';
           state.playlist = '37i9dQZF1EIfv2exTKzl3M';
-          state.textColor = 'grey';
+          state.textColor = 'white';
         } else if (state.weather === 'clear') {
           state.url =
             'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';
