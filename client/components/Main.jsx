@@ -19,9 +19,9 @@ export default function Main() {
     <>
       <div className="hero-head">
         <div className="columns">
-          <Icon />
+          {token && <Icon />}
           <Zipcode />
-          <UserBox />
+          {token && <UserBox />}
         </div>
       </div>
 
