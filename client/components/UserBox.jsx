@@ -1,20 +1,27 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateEmail, updateUser } from '../redux/stateSlice';
 
-export default function UserBox({ user }) {
-  const username = useSelector((state) => state.updater.username);
+export default function UserBox() {
+  const { userName, email } = useSelector((state) => state.updater);
+  const dispatch = useDispatch();
 
   return (
     <div className="column">
       <div className="box is-size-4 has-text-white is-full-height">
-        <p>
-          Welcome
-          {' '}
-          Adam
-          !
-        </p>
-        <p>adam.liang@alumni.stonybrook.edu</p>
-        <button className="button is-primary is-small">Log Out</button>
+        {userName ? <p>Welcome {userName}!</p> : <p>Welcome! Please login.</p>}
+        <p>{email}</p>
+        {userName ? (
+          <button
+            className="button is-primary is-small"
+            onClick={() => {
+              dispatch(updateUser(null));
+              dispatch(updateEmail(null));
+            }}
+          >
+            Log Out
+          </button>
+        ) : null}
       </div>
     </div>
   );
