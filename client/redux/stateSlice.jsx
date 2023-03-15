@@ -122,6 +122,11 @@ const stateSlice = createSlice({
             'https://images.hdqwalls.com/wallpapers/marin-county-mist-morning-4k-5q.jpg';
           state.playlist = '7x5aH9KMGYORlCF5lguQ9q';
           state.textColor = 'grey';
+        } else if (state.weather === 'snow') {
+          state.url =
+            'https://images.hdqwalls.com/wallpapers/snowy-mountain-sunset-4q.jpg';
+          state.playlist = '4raqLXnmb8WYkjfed9olAR';
+          state.textColor = 'grey';
         }
       })
       .addCase(updateWeatherAPI.rejected, (state, action) => {
