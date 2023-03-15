@@ -6,12 +6,15 @@ import UserBox from './UserBox';
 import Icon from './Icon';
 import Player from './Player';
 import Login from './Login';
+import { updateZipcode } from '../redux/stateSlice';
 
 export default function Main() {
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.updater);
+  const { token, zipcode } = useSelector((state) => state.updater);
 
   useEffect(() => {
+    if (localStorage.getItem('zipcode'))
+      dispatch(updateZipcode(localStorage.getItem('zipcode')));
     dispatch(fetchUserData());
   }, []);
 

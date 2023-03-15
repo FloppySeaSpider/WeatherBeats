@@ -6,7 +6,7 @@ const initialState = {
   email: null,
   weather: null,
   temp: null,
-  zipcode: '10001',
+  zipcode: '',
   city: null,
   url: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80',
   playlist: '4ANPW38qMEYQ3Z1mVLrtmm',
@@ -106,7 +106,7 @@ const stateSlice = createSlice({
         if (state.weather === 'clouds') {
           state.url = 'https://images.hdqwalls.com/wallpapers/sunny-fields.jpg';
           state.playlist = '37i9dQZF1EIfv2exTKzl3M';
-          state.textColor = 'grey';
+          state.textColor = 'white';
         } else if (state.weather === 'clear') {
           state.url =
             'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';

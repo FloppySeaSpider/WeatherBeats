@@ -33,24 +33,23 @@ export const fetchUserData = createAsyncThunk(
   }
 );
 
-export const updateWeatherAPI = createAsyncThunk(
-  '/api/weather',
-  async (_, { getState }) => {
-    const body = JSON.stringify({ zip: getState().updater.zipcode });
-    const response = await fetch('/api/weather', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        mode: 'no-cors'
-      },
-      body
-    });
-    const newData = await response.json();
-    return {
-      type: 'updater/updateWeather',
-      city: newData.city,
-      weather: newData.type,
-      temp: newData.temp
-    };
-  }
-);
+export const updateWeatherAPI = createAsyncThunk('/api/weather', async () => {
+  const zipcode = localStorage.getItem('zipcode');
+  console.log('ZIPCODE', zipcode);
+  const body = JSON.stringify({ zip: zipcode });
+  const response = await fetch('/api/weather', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      mode: 'no-cors'
+    },
+    body
+  });
+  const newData = await response.json();
+  return {
+    type: 'updater/updateWeather',
+    city: newData.city,
+    weather: newData.type,
+    temp: newData.temp
+  };
+});
