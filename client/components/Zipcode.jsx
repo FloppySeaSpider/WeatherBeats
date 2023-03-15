@@ -4,9 +4,7 @@ import {
   updateType,
   updateTemp,
   updateZipcode,
-  updateCity,
-  updateUrl,
-  updateAll
+  updateCity
 } from '../redux/stateSlice';
 
 // send fetch request to get weather from API based upon Zip Code
@@ -15,9 +13,7 @@ import {
 
 export default function Zipcode() {
   const dispatch = useDispatch();
-  const { temp, city, type, zipcode, apiQuery } = useSelector(
-    (state) => state.updater
-  );
+  const { temp, city, type, zipcode } = useSelector((state) => state.updater);
 
   const updateWeatherAPI = async () => {
     const body = JSON.stringify({ zip: zipcode });
@@ -33,7 +29,6 @@ export default function Zipcode() {
     dispatch(updateCity(newData.city));
     dispatch(updateType(newData.type));
     dispatch(updateTemp(newData.temp));
-    dispatch(updateApiQuery(false));
   };
 
   useEffect(() => {

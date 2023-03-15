@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updatePlaylist } from '../redux/stateSlice';
+import {
+  updatePlaylist,
+  updateUser,
+  updateEmail,
+  updateToken
+} from '../redux/stateSlice';
 import Zipcode from './Zipcode';
 import UserBox from './UserBox';
 import Icon from './Icon';
@@ -10,9 +15,8 @@ import Login from './Login';
 
 export default function Main() {
   const dispatch = useDispatch();
-  const [token, setToken] = useState('');
-  const [userData, setUserData] = useState({});
-  // const [playlist, setPlaylist] = useState('4ANPW38qMEYQ3Z1mVLrtmm');
+  const { token } = useSelector((state) => state.updater);
+
   const weatherType = useSelector((state) => state.updater.type);
   const playlist = useSelector((state) => state.updater.playlist);
 
@@ -37,19 +41,19 @@ export default function Main() {
         const response = await fetch('/auth/token');
         const data = await response.json();
         const { accessToken } = data;
-        setToken(accessToken.trim());
+        dispatch(updateToken(accessToken.trim()));
       } catch (error) {
         console.error('Token fetch error: ', error);
       }
     };
-    console.log('Current token ', token);
 
     // fetch userdata
     const fetchUserData = async () => {
       try {
         const response = await fetch('/api/user');
         const data = await response.json();
-        setUserData(data);
+        dispatch(updateUser(data.display_name));
+        dispatch(updateEmail(data.email));
       } catch (error) {
         console.error('User data fetch error: ', error);
       }
@@ -75,12 +79,15 @@ export default function Main() {
 
       <div className="hero-body">
         <div className="container has-text-centered">
-
           <div id="player" className="card">
             <div className="card-content">
               <div className="content">
                 <div className="field">
-                  { (!token) ? <Login /> : <Player token={token} playlistUri={playlist} /> }
+                  {!token ? (
+                    <Login />
+                  ) : (
+                    <Player token={token} playlistUri={playlist} />
+                  )}
                   {/* { (!token) ? <Login /> : <Player token={token} playlistUri="37i9dQZF1EIfv2exTKzl3M" /> } */}
                 </div>
               </div>
