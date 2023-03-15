@@ -136,8 +136,6 @@ const stateSlice = createSlice({
   }
 });
 
-//THUNKS
-
 export const {
   updateWeather,
   updateTemp,

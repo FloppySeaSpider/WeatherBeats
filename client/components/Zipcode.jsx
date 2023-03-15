@@ -10,9 +10,8 @@ import { updateWeatherAPI } from '../redux/thunks';
 
 export default function Zipcode() {
   const dispatch = useDispatch();
-  const { temp, city, weather, zipcode, textColor } = useSelector(
-    (state) => state.updater
-  );
+  const { temp, city, weather, zipcode, textColor, weatherLoadingState } =
+    useSelector((state) => state.updater);
 
   useEffect(() => {
     dispatch(updateWeatherAPI());
@@ -26,7 +25,7 @@ export default function Zipcode() {
         </div>
 
         <div className="field has-addons is-align-content-center is-justify-content-center">
-          <div className="has-icons-right is-expanded">
+          <div className="has-icons-right is-expanded is-size-4 is-loading is-large">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -39,12 +38,19 @@ export default function Zipcode() {
                 placeholder="ZIPCODE"
                 onChange={(e) => dispatch(updateZipcode(e.target.value))}
                 value={zipcode}
+                minlength="5"
+                maxlength="5"
+                required
               />
             </form>
           </div>
           <p className="control">
-            <a className="button is-primary has-text-weight-bold is-size-4 has-text-light">
-              Location
+            <a
+              className={`button is-primary has-text-weight-bold is-size-4 has-text-light ${
+                weatherLoadingState === 'Loading' ? 'is-loading' : ''
+              }`}
+            >
+              Submit
             </a>
           </p>
         </div>
