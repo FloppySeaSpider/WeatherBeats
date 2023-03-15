@@ -4,8 +4,11 @@ const path = require('path');
 const authRoutes = require('./routes/authRouter');
 const weatherRouter = require('./routes/weatherRouter');
 const cors = require('cors');
+cont sqldb = require('../database/database.js')
 
 require('dotenv').config();
+
+sqldb.connect();
 
 const app = express();
 const PORT = 3000;

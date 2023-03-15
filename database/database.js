@@ -1,13 +1,13 @@
 //CONNECTING TO OUR DATABASE
 require('dotenv').config();
-
 const mysql = require("mysql");
+
 var connection = mysql.createConnection({
-  host: 'weatherbeatsdb.cxqjdq6uqtfw.us-east-2.rds.amazonaws.com',
+  host: 'weatherbeats-db.cxqjdq6uqtfw.us-east-2.rds.amazonaws.com',
   user: "admin",
-  password: ",
+  password: DB_PASSWORD,
   port: "3306",
-  database: "earthlink",
+  database: "weatherbeatsdb",
 });
 
 connection.connect(function (err) {
