@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  userName: 'Regina',
-  type: 'Rainy',
-  temp: '69',
-  zipcode: '37064',
-  city: 'New York City',
+  userName: null,
+  email: 'test@test.com',
+  type: null,
+  temp: null,
+  zipcode: '10001',
+  city: null,
   url: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80',
-  bg: 'https://images.hdqwalls.com/wallpapers/sunny-fields.jpg',
   playlist: '4ANPW38qMEYQ3Z1mVLrtmm',
-  apiQuery: false
+  token: null
 };
 
 const stateSlice = createSlice({
@@ -24,14 +24,22 @@ const stateSlice = createSlice({
       state.url = action.payload.url;
       state.bg = action.payload.bg;
     },
-    updatePlaylist: (state, action) => {
-      state.playlist = action.payload;
-    },
     updateUser: (state, action) => {
       state.userName = action.payload;
     },
     updateType: (state, action) => {
       state.type = action.payload;
+      if (action.payload === 'clouds') {
+        state.url = 'https://images.hdqwalls.com/wallpapers/sunny-fields.jpg';
+        state.playlist = '37i9dQZF1EIfv2exTKzl3M';
+      } else if (action.payload === 'clear') {
+        state.url = 'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';
+        state.playlist = '6VCXXQSDMXLYaHNaWPx11S';
+      } else if (action.payload === 'rain') {
+        state.url =
+          'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
+        state.playlist = '4ANPW38qMEYQ3Z1mVLrtmm';
+      }
     },
     updateTemp: (state, action) => {
       state.temp = action.payload;
@@ -42,11 +50,11 @@ const stateSlice = createSlice({
     updateCity: (state, action) => {
       state.city = action.payload;
     },
-    updateUrl: (state, action) => {
-      state.url = action.payload;
+    updateEmail: (state, action) => {
+      state.email = action.payload;
     },
-    updateApiQuery: (state, action) => {
-      state.apiQuery = action.payload;
+    updateToken: (state, action) => {
+      state.token = action.payload;
     }
   }
 });
@@ -59,6 +67,8 @@ export const {
   updateUrl,
   updateAll,
   updateUser,
-  updatePlaylist
+  updatePlaylist,
+  updateEmail,
+  updateToken
 } = stateSlice.actions;
 export default stateSlice.reducer;
