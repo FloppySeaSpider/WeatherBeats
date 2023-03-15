@@ -14,17 +14,21 @@ app.use(express.json());
 //Parsing URL encoded
 app.use(express.urlencoded({ extended: false }));
 // creating a session instance
-app.use(session({
-  // secret is in .env file
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7,
-    // secure true will only persist the cookie in https
-    secure: false,
-  },
-}));
+app.use(
+  session({
+    // secret is in .env file
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      // secure true will only persist the cookie in https
+      secure: false
+    }
+  })
+);
+
+app.use(express.static('public'));
 
 // Todo: get request for weather type
 app.use('/auth', authRoutes);
@@ -38,7 +42,7 @@ app.get('/api/user', async (req, res) => {
   const data = {
     display_name,
     email,
-    href,
+    href
   };
   return res.status(200).json(data);
 });
