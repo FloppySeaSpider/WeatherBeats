@@ -6,6 +6,7 @@ import UserBox from './UserBox';
 import Icon from './Icon';
 import Player from './Player';
 import Login from './Login';
+import UserProfile from './UserProfile';
 
 export default function Main() {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export default function Main() {
           {token && <Icon />}
           <Zipcode />
           {token && <UserBox />}
+          <UserProfile/>
         </div>
       </div>
 
