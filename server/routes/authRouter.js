@@ -18,7 +18,8 @@ authRouter.get('/login', (req, res) => {
     client_id: spotifyClientId,
     response_type: 'code',
     redirect_uri: spotifyCallbackUrl,
-    scope: 'user-read-email user-read-private streaming playlist-read-private playlist-read-collaborative',
+    scope:
+      'user-read-email user-read-private streaming playlist-read-private playlist-read-collaborative'
   };
   const urlSearchParams = new URLSearchParams(params);
   res.redirect(`${authUrl}?${urlSearchParams.toString()}`);
@@ -31,7 +32,7 @@ authRouter.get('/callback', async (req, res, next) => {
   const body = new URLSearchParams({
     grant_type: 'authorization_code',
     code: req.query.code,
-    redirect_uri: spotifyCallbackUrl,
+    redirect_uri: spotifyCallbackUrl
   });
 
   try {
@@ -39,16 +40,15 @@ authRouter.get('/callback', async (req, res, next) => {
     const { data } = await axios.post(tokenUrl, body.toString(), {
       headers: {
         Authorization: authHeader,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     });
     // stick it in an express session
     req.session.token = {
       accessToken: data.access_token,
       refreshToken: data.refresh_token,
-      tokenTimeStamp: Date.now(),
+      tokenTimeStamp: Date.now()
     };
-    console.log(req.session.token);
 
     // example fetching data from spotify using axios
     const userUrl = 'https://api.spotify.com/v1/me';
@@ -56,8 +56,8 @@ authRouter.get('/callback', async (req, res, next) => {
     // this time we use bearer token which make use of the oauth token
     const user = await axios.get(userUrl, {
       headers: {
-        Authorization: `Bearer ${req.session.token.accessToken}`,
-      },
+        Authorization: `Bearer ${req.session.token.accessToken}`
+      }
     });
 
     const userData = user.data;
@@ -72,8 +72,6 @@ authRouter.get('/callback', async (req, res, next) => {
 
 // important for backend to grab token which i stored in sessions
 authRouter.get('/token', async (req, res) => {
-  console.log('Requesting token...');
-  console.log(req.session);
   if (!req.session.token) return res.redirect('/auth/login');
   const { refreshToken, tokenTimeStamp } = req.session.token;
   const currentTime = Date.now();
@@ -86,20 +84,25 @@ authRouter.get('/token', async (req, res) => {
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
         headers: {
-          Authorization: `Basic ${Buffer.from(`${spotifyClientId}:${spotifyClientSecret}`).toString('base64')}`,
-        },
-      },
+          Authorization: `Basic ${Buffer.from(
+            `${spotifyClientId}:${spotifyClientSecret}`
+          ).toString('base64')}`
+        }
+      }
     };
 
     try {
       console.log('Refreshing token...');
-      const { data } = await axios.post('https://accounts.spotify.com/api/token', authData);
+      const { data } = await axios.post(
+        'https://accounts.spotify.com/api/token',
+        authData
+      );
       const accessToken = data.access_token;
       res.session.token.accessToken = accessToken;
       res.session.token.refreshToken = refreshToken;
       res.session.token.tokenTimeStamp = Date.now();
       return res.status(200).json({
-        accessToken,
+        accessToken
       });
     } catch (error) {
       console.error('Failed to refresh token... ', error);

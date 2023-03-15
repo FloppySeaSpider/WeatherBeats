@@ -8,14 +8,12 @@ weatherController.getData = async (req, res, next) => {
   try {
     // Getting the zipcode
     const { zip } = req.body;
-    console.log('given ZIPCODE', zip);
     // Convert to nm
     const WEATHER_URL_ZIP = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=${process.env.WEATHER_API_KEY}&units=imperial`;
     // fetching weather
     const weatherReq = await fetch(WEATHER_URL_ZIP);
     //
     const apiResponse = await weatherReq.json();
-    console.log('apiResponsee', apiResponse);
 
     responseObj = {
       type: apiResponse.weather[0].main.toLowerCase(),

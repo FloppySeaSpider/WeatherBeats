@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateUser, updateEmail, updateToken } from '../redux/stateSlice';
+import { fetchUserData } from '../redux/thunks';
 import Zipcode from './Zipcode';
 import UserBox from './UserBox';
 import Icon from './Icon';
@@ -12,31 +12,8 @@ export default function Main() {
   const { token } = useSelector((state) => state.updater);
 
   useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const response = await fetch('/auth/token');
-        const data = await response.json();
-        const { accessToken } = data;
-        dispatch(updateToken(accessToken.trim()));
-      } catch (error) {
-        console.error('Token fetch error: ', error);
-      }
-    };
-
-    // fetch userdata
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch('/api/user');
-        const data = await response.json();
-        dispatch(updateUser(data.display_name));
-        dispatch(updateEmail(data.email));
-      } catch (error) {
-        console.error('User data fetch error: ', error);
-      }
-    };
-    fetchToken();
-    fetchUserData();
-  }, [token]);
+    dispatch(fetchUserData());
+  }, []);
 
   return (
     <>
