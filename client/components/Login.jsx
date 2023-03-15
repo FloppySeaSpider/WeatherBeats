@@ -2,8 +2,7 @@
 import React from 'react';
 import Logo from '../../public/logo.png';
 
-export default function Login(props) {
-  console.log('Login', props);
+export default function Login() {
   return (
     <div className="hero-body">
       <div className="container">

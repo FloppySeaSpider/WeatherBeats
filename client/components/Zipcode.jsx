@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  updateType,
-  updateTemp,
-  updateZipcode,
-  updateCity
-} from '../redux/stateSlice';
+import { updateZipcode } from '../redux/stateSlice';
+
+import { updateWeatherAPI } from '../redux/thunks';
 
 // send fetch request to get weather from API based upon Zip Code
 
@@ -13,26 +10,12 @@ import {
 
 export default function Zipcode() {
   const dispatch = useDispatch();
-  const { temp, city, type, zipcode } = useSelector((state) => state.updater);
-
-  const updateWeatherAPI = async () => {
-    const body = JSON.stringify({ zip: zipcode });
-    const response = await fetch('http://localhost:3000/api/weather', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        mode: 'no-cors'
-      },
-      body
-    });
-    const newData = await response.json();
-    dispatch(updateCity(newData.city));
-    dispatch(updateType(newData.type));
-    dispatch(updateTemp(newData.temp));
-  };
+  const { temp, city, weather, zipcode } = useSelector(
+    (state) => state.updater
+  );
 
   useEffect(() => {
-    updateWeatherAPI();
+    dispatch(updateWeatherAPI());
   }, []);
 
   return (
@@ -47,7 +30,7 @@ export default function Zipcode() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                updateWeatherAPI();
+                dispatch(updateWeatherAPI());
               }}
             >
               <input
@@ -68,7 +51,7 @@ export default function Zipcode() {
 
         <footer className="card-footer">
           <p className="card-footer-item has-text-weight-bold is-size-4 has-text-grey is-capitalized">
-            {type}
+            {weather}
           </p>
           <p className="card-footer-item has-text-weight-bold is-size-4 has-text-grey has-text-centered">
             {city}
