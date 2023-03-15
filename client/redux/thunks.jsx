@@ -5,6 +5,8 @@ export const fetchToken = createAsyncThunk('auth/fetchToken', async () => {
     const response = await fetch('/auth/token');
     const data = await response.json();
     const { accessToken } = data;
+    console.log('HERE');
+    console.log('TOKEN', accessToken);
     return { token: accessToken.trim(), type: 'updater/updateToken' };
   } catch (error) {
     console.error('Token fetch error: ', error);

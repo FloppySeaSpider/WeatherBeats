@@ -14,7 +14,10 @@ const initialState = {
   tokenLoadingState: 'Loading',
   tokenError: null,
   userInfoLoadingState: 'Loading',
-  userInfoLoadingError: null
+  userInfoLoadingError: null,
+  weatherLoadingState: 'Loading',
+  weatherLoadingError: null,
+  textColor: 'grey'
 };
 
 const stateSlice = createSlice({
@@ -90,32 +93,45 @@ const stateSlice = createSlice({
         state.userInfoLoadingError = action.error.message;
       })
       .addCase(updateWeatherAPI.pending, (state) => {
-        state.userInfoLoadingState = 'Loading';
-        state.userInfoLoadingError = null;
+        state.weatherLoadingState = 'Loading';
+        state.weatherLoadingError = null;
       })
       .addCase(updateWeatherAPI.fulfilled, (state, action) => {
-        state.userInfoLoadingState = 'Succeeded';
+        state.weatherLoadingState = 'Succeeded';
         state.city = action.payload.city;
         state.weather = action.payload.weather;
         state.temp = action.payload.temp;
-        state.userInfoLoadingError = null;
+        state.weatherLoadingError = null;
 
         if (state.weather === 'clouds') {
           state.url = 'https://images.hdqwalls.com/wallpapers/sunny-fields.jpg';
           state.playlist = '37i9dQZF1EIfv2exTKzl3M';
+          state.textColor = 'grey';
         } else if (state.weather === 'clear') {
           state.url =
             'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';
           state.playlist = '6VCXXQSDMXLYaHNaWPx11S';
+          state.textColor = 'grey';
         } else if (state.weather === 'rain') {
           state.url =
             'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
           state.playlist = '4ANPW38qMEYQ3Z1mVLrtmm';
+          state.textColor = 'white';
+        } else if (state.weather === 'mist') {
+          state.url =
+            'https://images.hdqwalls.com/wallpapers/marin-county-mist-morning-4k-5q.jpg';
+          state.playlist = '7x5aH9KMGYORlCF5lguQ9q';
+          state.textColor = 'grey';
+        } else if (state.weather === 'snow') {
+          state.url =
+            'https://images.hdqwalls.com/wallpapers/snowy-mountain-sunset-4q.jpg';
+          state.playlist = '4raqLXnmb8WYkjfed9olAR';
+          state.textColor = 'grey';
         }
       })
       .addCase(updateWeatherAPI.rejected, (state, action) => {
-        state.userInfoLoadingState = 'Failed';
-        state.userInfoLoadingError = action.error.message;
+        state.weatherLoadingState = 'Failed';
+        state.weatherLoadingError = action.error.message;
       });
   }
 });

@@ -10,7 +10,7 @@ import { updateWeatherAPI } from '../redux/thunks';
 
 export default function Zipcode() {
   const dispatch = useDispatch();
-  const { temp, city, weather, zipcode } = useSelector(
+  const { temp, city, weather, zipcode, textColor } = useSelector(
     (state) => state.updater
   );
 
@@ -25,8 +25,8 @@ export default function Zipcode() {
           <span />
         </div>
 
-        <div className="field has-addons">
-          <div className="control has-icons-left has-icons-right is-expanded">
+        <div className="field has-addons is-align-content-center is-justify-content-center">
+          <div className="has-icons-right is-expanded">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -50,14 +50,20 @@ export default function Zipcode() {
         </div>
 
         <footer className="card-footer">
-          <p className="card-footer-item has-text-weight-bold is-size-4 has-text-grey is-capitalized">
+          <p
+            className={`card-footer-item has-text-weight-bold is-size-4 has-text-${textColor} is-capitalized`}
+          >
             {weather}
           </p>
-          <p className="card-footer-item has-text-weight-bold is-size-4 has-text-grey has-text-centered">
+          <p
+            className={`card-footer-item has-text-weight-bold is-size-4 has-text-${textColor} has-text-centered`}
+          >
             {city}
           </p>
-          <p className="card-footer-item has-text-weight-bold is-size-4 has-text-grey">
-            {temp}
+          <p
+            className={`card-footer-item has-text-weight-bold is-size-4 has-text-${textColor}`}
+          >
+            {`${temp}°F`}
           </p>
         </footer>
       </div>

@@ -7,7 +7,7 @@ export default function Login() {
     <div className="hero-body">
       <div className="container">
         <div className="columns is-centered">
-          <div className="column is-5-tablet is-4-desktop is-4-widescreen">
+          <div className="column is-12">
             <div className="card">
               <div className="image is-64x64" />
 
@@ -28,13 +28,13 @@ export default function Login() {
                     </a>
                   </div>
 
-                  <div className="field">
+                  <div className="field" id="forgot-password">
                     <label className="label has-text-centered has-text-white">
                       Forgot Password?
                     </label>
                   </div>
 
-                  <div className="field">
+                  <div className="field" id="sign-up">
                     <label className="label has-text-centered has-text-white">
                       Sign Up
                     </label>
