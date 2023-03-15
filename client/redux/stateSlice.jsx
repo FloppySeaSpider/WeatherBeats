@@ -1,14 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  userName: 'Regina',
-  type: 'Rainy',
-  temp: 69,
-  zipcode: 10001,
-  city: 'New York City',
+  userName: null,
+  email: 'test@test.com',
+  type: null,
+  temp: null,
+  zipcode: '10001',
+  city: null,
   url: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80',
-  bg: "https://images.hdqwalls.com/wallpapers/sunny-fields.jpg",
+  bg: 'https://images.hdqwalls.com/wallpapers/sunny-fields.jpg',
   playlist: '4ANPW38qMEYQ3Z1mVLrtmm',
+  token: null
 };
 
 const stateSlice = createSlice({
@@ -23,10 +25,10 @@ const stateSlice = createSlice({
       state.url = action.payload.url;
       state.bg = action.payload.bg;
     },
-    updatePlaylist: (state, action) =>  {
+    updatePlaylist: (state, action) => {
       state.playlist = action.payload;
     },
-    updateUser: (state, action) =>  {
+    updateUser: (state, action) => {
       state.userName = action.payload;
     },
     updateType: (state, action) => {
@@ -43,10 +45,26 @@ const stateSlice = createSlice({
     },
     updateUrl: (state, action) => {
       state.url = action.payload;
+    },
+    updateEmail: (state, action) => {
+      state.email = action.payload;
+    },
+    updateToken: (state, action) => {
+      state.token = action.payload;
     }
   }
 });
 
-export const { updateType, updateTemp, updateZipcode, updateCity, updateUrl, updateAll, updateUser, updatePlaylist } =
-  stateSlice.actions;
+export const {
+  updateType,
+  updateTemp,
+  updateZipcode,
+  updateCity,
+  updateUrl,
+  updateAll,
+  updateUser,
+  updatePlaylist,
+  updateEmail,
+  updateToken
+} = stateSlice.actions;
 export default stateSlice.reducer;
