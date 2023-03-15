@@ -4,11 +4,15 @@ const path = require('path');
 const authRoutes = require('./routes/authRouter');
 const weatherRouter = require('./routes/weatherRouter');
 const cors = require('cors');
+const db = require('../database/database');
 
 require('dotenv').config();
 
+
+
 const app = express();
 const PORT = 3000;
+
 
 //Parsing JSON
 app.use(express.json());
