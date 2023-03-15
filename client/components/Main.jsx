@@ -63,7 +63,3 @@ export default function Main() {
     </>
   );
 }
-
-// On page render, we will have access to a JSON object from Spotify
-// On page load, we can send a Post request to our Database with the username of the persom
-// On Zip Code Use Effect Fire
