@@ -12,7 +12,7 @@ dotenv.config();
 
 const spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
 const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-const spotifyCallbackUrl = 'http://localhost:3000/auth/callback';
+const spotifyCallbackUrl = `${process.env.URI}auth/callback`;
 
 authRouter.get('/', (req, res) => res.send('Auth Test'));
 authRouter.get('/login', (req, res) => {
@@ -63,26 +63,28 @@ authRouter.get('/callback', async (req, res, next) => {
       }
     });
 
-  
-
     const userData = user.data;
 
     //check if user exists in our database
-    const {email, display_name} = user.data;
-    
+    const { email, display_name } = user.data;
+
     const query = 'SELECT * FROM user_table WHERE email_address = ?';
 
-    if(DB_PASSWORD !== undefined && DB_PASSWORD !== null && DB_PASSWORD !== '') {
-      console.log("Searching the user in the database...");
+    if (
+      DB_PASSWORD !== undefined &&
+      DB_PASSWORD !== null &&
+      DB_PASSWORD !== ''
+    ) {
+      console.log('Searching the user in the database...');
       dbconnection.query(query, [email], (err, results, fields) => {
         if (err) {
           console.error('Error executing search query: ', err);
         }
         //user doesn't exist, must add user info to the database
-        if(results.length === 0) {
-          console.log("No match found - inserting data into the data base");
+        if (results.length === 0) {
+          console.log('No match found - inserting data into the data base');
           const toQuery = `INSERT INTO user_table (email_address, display_name) VALUES ('${email}', '${display_name}')`;
-  
+
           dbconnection.query(toQuery, (err, results, fields) => {
             if (err) {
               console.Ferror('Error executing query: ', err);
@@ -91,13 +93,14 @@ authRouter.get('/callback', async (req, res, next) => {
             console.log('Data inserted successfully!');
           });
         } else {
-          console.log("User already exists in the database.");
+          console.log('User already exists in the database.');
         }
       });
     } else {
-      console.log("DB_PASSWORD was not provided in the .env file - skipping database functionality.");
+      console.log(
+        'DB_PASSWORD was not provided in the .env file - skipping database functionality.'
+      );
     }
-    
 
     req.session.user = userData;
     return res.redirect('http://localhost:8080');

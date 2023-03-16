@@ -85,10 +85,10 @@ module.exports = {
     port: 8080,
     proxy: {
       '/auth': {
-        target: 'http://127.0.0.1:3000/'
+        target: process.env.URI
       },
       '/api': {
-        target: 'http://127.0.0.1:3000/'
+        target: process.env.URI
       }
     }
   }

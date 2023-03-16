@@ -31,7 +31,7 @@ export default function Main() {
   const ws = useRef(null);
 
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:3000');
+    const socket = new WebSocket('ws://104.248.31.172:3000/');
 
     //Scuffed solution, but send the following string as a way for the websocket server to identify new connections.
     socket.onopen = () => {
