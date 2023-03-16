@@ -1,6 +1,6 @@
 import React from 'react';
-import Main from './components/Main';
 import { useSelector } from 'react-redux';
+import Main from './components/Main';
 
 export default function App() {
   const { url } = useSelector((state) => state.updater);
@@ -12,6 +12,7 @@ export default function App() {
       style={{ backgroundImage: `url(${url})` }}
     >
       <Main />
+
     </section>
   );
 }

@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+const cors = require('cors');
 const authRoutes = require('./routes/authRouter');
 const weatherRouter = require('./routes/weatherRouter');
 const cors = require('cors');
@@ -56,7 +57,7 @@ const PORT = 3000;
 
 //Parsing JSON
 app.use(express.json());
-//Parsing URL encoded
+// Parsing URL encoded
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 // creating a session instance
@@ -80,7 +81,7 @@ app.use(express.static('public'));
 app.use('/auth', authRoutes);
 app.use('/api/weather', weatherRouter);
 
-app.get('/api/user', async (req, res) => {
+app.get('/api/user', async (req, res, next) => {
   if (!req.session.user) {
     return res.status(401).json({ error: 'User not logged in' });
   }
@@ -95,13 +96,13 @@ app.get('/api/user', async (req, res) => {
 
 // added catch
 app.use('*', (req, res) => res.sendStatus(404));
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   const template = {
     status: 500,
     message: 'Error in middleware',
     log: 'Error in middleware'
   };
-  const errObj = Object.assign({}, template, err);
+  const errObj = { ...template, ...err };
   console.log(errObj.log);
   return res.status(errObj.status).send(errObj.message);
 });
