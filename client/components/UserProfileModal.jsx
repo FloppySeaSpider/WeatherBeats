@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { closeModal } from '../redux/stateSlice';
 import UserProfile from './UserProfile';
-
+//testing merge issues 
 function Modal() {
   const dispatch = useDispatch();
   return (
