@@ -8,18 +8,17 @@ import Player from './Player';
 import Login from './Login';
 import Chat from './Chat';
 import { updateZipcode } from '../redux/stateSlice';
-<<<<<<< Updated upstream
 import Modal from './UserProfileModal';
-=======
 import { useState } from 'react';
->>>>>>> Stashed changes
 
 export default function Main() {
   const dispatch = useDispatch();
   const { token, isOpen } = useSelector((state) => state.updater);
 
   useEffect(() => {
-    if (localStorage.getItem('zipcode')) { dispatch(updateZipcode(localStorage.getItem('zipcode'))); }
+    if (localStorage.getItem('zipcode')) {
+      dispatch(updateZipcode(localStorage.getItem('zipcode')));
+    }
     dispatch(fetchUserData());
   }, []);
 
