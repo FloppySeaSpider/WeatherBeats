@@ -83,6 +83,7 @@ module.exports = {
     // opens window when changes happen (can be annoying beware)
     open: true,
     port: 8080,
+    disableHostCheck: true,
     proxy: {
       '/auth': {
         target: process.env.URI
