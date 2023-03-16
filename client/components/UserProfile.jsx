@@ -40,8 +40,18 @@ function UserProfile() {
         <div className="content">
 
           <div className="favSongsHeader">
-            <Icon path={mdiClockTimeFive} size={1} />
-            Last Three Zip Codes
+            {/* <Icon path={mdiClockTimeFive} size={1} /> */}
+            <h3>About Me</h3>
+            <button
+              className="button is-primary is-small"
+              type="submit"
+              onClick={() => {
+                dispatch();
+              }}
+            >
+              Edit
+            </button>
+            
           </div>
 
           <br />
