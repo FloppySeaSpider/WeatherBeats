@@ -7,6 +7,7 @@ const weatherRouter = require('./routes/weatherRouter');
 // const db = require('../database/database');
 const ws = require('ws');
 const { v4: uuidv4 } = require('uuid');
+const { cli } = require('webpack-dev-server');
 
 require('dotenv').config();
 
@@ -19,24 +20,58 @@ require('dotenv').config();
 //https://www.npmjs.com/package/ws
 
 const clients = {};
+const loggedInUsers = {};
 
 function handleDisconnect(userId) {
-  const json = `${userId} disconnected.`;
   delete clients[userId];
+  let userName;
+  if (loggedInUsers.hasOwnProperty(userId)) {
+    userName = loggedInUsers[userId];
+    delete loggedInUsers[userId];
+  }
   //Let's not broadcast the disconnect string until we have unique users. Just use a different object that relates the username to the UUID.
   //That way multiple people can have the same name.
-  broadcastMessage(json);
+  if (userName) {
+    const message = `${userName} disconnected.`;
+    broadcastMessage(message);
+  }
 }
 
-function broadcastMessage(json) {
+function broadcastMessage(json, isLoggingIn, userId) {
+  //Handle the broadcast logic if this is a user login event.
+  let data;
+  if (isLoggingIn) {
+    data = `${loggedInUsers[userId]} has joined the chat.`;
+  }
   // We are sending the current data to all connected active clients
-  const data = JSON.stringify(json.toString('utf-8'));
-  for (let userId in clients) {
-    let client = clients[userId];
+  else data = json;
+  //Let's concatenate onto the beginning of the message the username if they exist in the database.
+  if (loggedInUsers.hasOwnProperty(userId) && !isLoggingIn) {
+    // data = JSON.stringify(loggedInUsers[userId].toString('utf-8')) + data;
+    data = `${loggedInUsers[userId]}: ${data}`;
+  }
+  //Finally, parse the data before sending it.
+  data = JSON.stringify(data.toString('utf-8'));
+  for (let uID in clients) {
+    //Do not send the client a copy of the message, as it will appear in their chat instantaneously on the client side.
+    if (uID === userId) continue;
+    let client = clients[uID];
     if (client.readyState === ws.OPEN) {
       client.send(data);
     }
   }
+}
+
+//Add user to our logged in collection if they are logged in.
+function checkIfNewUser(json, userId) {
+  const data = json.toString('utf-8');
+  //The first part of the string is USERNAME:
+  if (data.includes('USERNAME:')) {
+    const username = data.split(' ')[1];
+    loggedInUsers[userId] = username;
+    return true;
+  }
+  return false;
 }
 
 const wsServer = new ws.Server({ noServer: true });
@@ -44,10 +79,13 @@ wsServer.on('connection', (connection) => {
   // connection.on('message', (message) => console.log(message.toString('utf8')));
   const userId = uuidv4();
   clients[userId] = connection;
-  console.log(`${userId} connected.`);
 
   //Sending messages to all clients.
-  connection.on('message', (message) => broadcastMessage(message));
+  connection.on('message', (message) => {
+    //When a client connects, if they connect with a username, use this username.
+    const isLoggingIn = checkIfNewUser(message, userId);
+    broadcastMessage(message, isLoggingIn, userId);
+  });
 
   // User disconnected
   connection.on('close', () => handleDisconnect(userId));

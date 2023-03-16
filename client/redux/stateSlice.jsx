@@ -21,7 +21,8 @@ const initialState = {
   isOpen: false,
   websocketArr: [],
   webSocketStatus: false,
-  webSocketMessage: ''
+  webSocketMessage: '',
+  webSocketSentMessage: ''
 };
 
 const stateSlice = createSlice({
@@ -82,6 +83,9 @@ const stateSlice = createSlice({
     },
     updatewebSocketMessage: (state, action) => {
       state.webSocketMessage = action.payload;
+    },
+    updatewebSocketSentMessage: (state, action) => {
+      state.webSocketSentMessage = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -171,7 +175,8 @@ export const {
   closeModal,
   updateWebSocket,
   updateWebSocketStatus,
-  updatewebSocketMessage
+  updatewebSocketMessage,
+  updatewebSocketSentMessage
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

@@ -21,22 +21,22 @@ export const WebsocketContext = createContext(false, null, () => {});
 
 export default function Main() {
   const dispatch = useDispatch();
-  const { token, isOpen, webSocketStatus, webSocketMessage } = useSelector(
-    (state) => state.updater
-  );
+  const { token, isOpen, userName } = useSelector((state) => state.updater);
 
   //WEBSOCKET LOGIC.
   //https://stackoverflow.com/questions/60152922/proper-way-of-using-react-hooks-websockets
   //https://www.kianmusser.com/articles/react-where-put-websocket/
-  //I'm putting the websocket into context, but it should be able to be stored in state.
+  //I'm putting the websocket into context, but it should be able to be stored in state. Redux doesn't like it by default, though.
+  //Just hacking a working solution.
   const ws = useRef(null);
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:3000');
 
+    //Scuffed solution, but send the following string as a way for the websocket server to identify new connections.
     socket.onopen = () => {
       dispatch(updateWebSocketStatus(true));
-      socket.send('New user connected.');
+      if (userName) socket.send(`USERNAME: ${userName}`);
     };
     socket.onclose = () => {
       socket.send('A user disconnected.');
@@ -44,7 +44,7 @@ export default function Main() {
     };
     //The idea is we will want to push messages in state to render a component, and then set the message to empty.
     socket.onmessage = (event) => {
-      dispatch(updatewebSocketMessage(event.data));
+      dispatch(updatewebSocketMessage(JSON.parse(event.data)));
     };
 
     ws.current = socket;
@@ -52,7 +52,7 @@ export default function Main() {
     return () => {
       socket.close();
     };
-  }, []);
+  }, [userName]);
 
   const ret = ws.current?.send.bind(ws.current);
 
@@ -86,14 +86,10 @@ export default function Main() {
             </div>
           </div>
         </div>
-        <div id="chat" className="card">
-          <div className="card-content">
-            <div className="content">
-              <WebsocketContext.Provider value={ret}>
-                <Chat />
-              </WebsocketContext.Provider>
-            </div>
-          </div>
+        <div id="chat">
+          <WebsocketContext.Provider value={ret}>
+            <Chat />
+          </WebsocketContext.Provider>
         </div>
       </div>
       <div className="hero-foot" />
