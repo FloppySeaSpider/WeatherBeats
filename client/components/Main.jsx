@@ -1,98 +1,98 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updatePlaylist } from '../redux/stateSlice';
+import { fetchUserData } from '../redux/thunks';
 import Zipcode from './Zipcode';
 import UserBox from './UserBox';
 import Icon from './Icon';
-import Logo from '../../public/logo.png';
 import Player from './Player';
 import Login from './Login';
+import Chat from './Chat';
+import {
+  updateZipcode,
+  updateWebSocket,
+  updateWebSocketStatus,
+  updatewebSocketMessage
+} from '../redux/stateSlice';
+import Modal from './UserProfileModal';
+import { useState, useRef, createContext } from 'react';
+
+export const WebsocketContext = createContext(false, null, () => {});
+//                                            ready, value, send
 
 export default function Main() {
   const dispatch = useDispatch();
-  const [token, setToken] = useState('');
-  const [userData, setUserData] = useState({});
-  // const [playlist, setPlaylist] = useState('4ANPW38qMEYQ3Z1mVLrtmm');
-  const weatherType = useSelector((state) => state.updater.type);
-  const playlist = useSelector((state) => state.updater.playlist);
+  const { token, isOpen, userName } = useSelector((state) => state.updater);
 
-  function changePlaylist(type) {
-    if (type === 'clouds') {
-      return dispatch(updatePlaylist('37i9dQZF1EIfv2exTKzl3M'));
-    }
-    if (type === 'clear') {
-      return dispatch(updatePlaylist('6VCXXQSDMXLYaHNaWPx11S'));
-    }
-    if (type === 'rain') {
-      return dispatch(updatePlaylist('4ANPW38qMEYQ3Z1mVLrtmm'));
-    }
-  }
+  //WEBSOCKET LOGIC.
+  //https://stackoverflow.com/questions/60152922/proper-way-of-using-react-hooks-websockets
+  //https://www.kianmusser.com/articles/react-where-put-websocket/
+  //I'm putting the websocket into context, but it should be able to be stored in state. Redux doesn't like it by default, though.
+  //Just hacking a working solution.
+  const ws = useRef(null);
 
   useEffect(() => {
-    // right now the token just fetches from the server sessions
-    // TODO: have the token refresh if it is expired (include timestamp in session)
-    // TODO: for some reason, fetching the token just give an empty object. working on this later
-    const fetchToken = async () => {
-      try {
-        const response = await fetch('/auth/token');
-        const data = await response.json();
-        const { accessToken } = data;
-        setToken(accessToken.trim());
-      } catch (error) {
-        console.error('Token fetch error: ', error);
-      }
-    };
-    console.log('Current token ', token);
+    const socket = new WebSocket('ws://localhost:3000');
 
-    // fetch userdata
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch('/api/user');
-        const data = await response.json();
-        setUserData(data);
-      } catch (error) {
-        console.error('User data fetch error: ', error);
-      }
+    //Scuffed solution, but send the following string as a way for the websocket server to identify new connections.
+    socket.onopen = () => {
+      dispatch(updateWebSocketStatus(true));
+      if (userName) socket.send(`USERNAME: ${userName}`);
     };
-    fetchToken();
-    fetchUserData();
+    socket.onclose = () => {
+      socket.send('A user disconnected.');
+      dispatch(updateWebSocketStatus(false));
+    };
+    //The idea is we will want to push messages in state to render a component, and then set the message to empty.
+    socket.onmessage = (event) => {
+      dispatch(updatewebSocketMessage(JSON.parse(event.data)));
+    };
 
-    // set playlist based on weather type
-    console.log('weather ', weatherType);
-    changePlaylist(weatherType);
-    console.log('changePlaylist', playlist);
-  }, [token]);
+    ws.current = socket;
+
+    return () => {
+      socket.close();
+    };
+  }, [userName]);
+
+  const ret = ws.current?.send.bind(ws.current);
+
+  //END OF WEBSOCKET LOGIC.
+
+  useEffect(() => {
+    if (localStorage.getItem('zipcode')) {
+      dispatch(updateZipcode(localStorage.getItem('zipcode')));
+    }
+    dispatch(fetchUserData());
+  }, []);
 
   return (
     <>
       <div className="hero-head">
         <div className="columns">
-          <Icon />
+          {token && <Icon />}
           <Zipcode />
-          <UserBox />
+          {token && <UserBox />}
+          {isOpen && <Modal />}
         </div>
       </div>
 
-      <div className="hero-body">
-        <div className="container has-text-centered">
-
+      <div className="hero-body is-align-content-center is-justify-content-center">
+        <div className="box center is-align-content-center is-justify-content-center">
           <div id="player" className="card">
             <div className="card-content">
               <div className="content">
-                <div className="field">
-                  { (!token) ? <Login /> : <Player token={token} playlistUri={playlist} /> }
-                  {/* { (!token) ? <Login /> : <Player token={token} playlistUri="37i9dQZF1EIfv2exTKzl3M" /> } */}
-                </div>
+                <div className="field">{!token ? <Login /> : <Player />}</div>
               </div>
             </div>
           </div>
+        </div>
+        <div id="chat">
+          <WebsocketContext.Provider value={ret}>
+            <Chat />
+          </WebsocketContext.Provider>
         </div>
       </div>
       <div className="hero-foot" />
     </>
   );
 }
-
-// On page render, we will have access to a JSON object from Spotify
-// On page load, we can send a Post request to our Database with the username of the persom
-// On Zip Code Use Effect Fire

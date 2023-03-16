@@ -2,23 +2,13 @@
 @import "node_modules/bulma/bulma.sass";
 
 #app {
-  background-image: url('https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80');
+  // background-image: url('https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80');
   background-size: cover;
   // background-size: 100vw;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
 }
-
-// .topGrid  {
-//   display: grid;
-//   flex-direction: row;
-// }
-
-// .infoBar  {
-//   display: grid;
-//   flex-direction: row;
-// }
 
 .card,
 .card-image,
@@ -37,4 +27,32 @@ h1 {
   background: -webkit-linear-gradient(#eee, #333);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.modal-overlay {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background-color: #ffffff;
+  border: 1px solid #bebebe;
+  border-radius: 2px;
+  padding: 12px 16px;
+  z-index: 10;
+  width: 500px;
+  height: 500px;
+  left: calc(50vw - 250px);
+  top: calc(50vh - 250px);
+  position: fixed;
+  display: block; 
+
 }

@@ -1,14 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { fetchToken, fetchUserData, updateWeatherAPI } from './thunks';
 
 const initialState = {
-  userName: 'Regina',
-  type: 'Rainy',
-  temp: 69,
-  zipcode: 10001,
-  city: 'New York City',
+  userName: null,
+  email: null,
+  weather: null,
+  temp: null,
+  zipcode: '',
+  city: null,
   url: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80',
-  bg: "https://images.hdqwalls.com/wallpapers/sunny-fields.jpg",
   playlist: '4ANPW38qMEYQ3Z1mVLrtmm',
+  token: null,
+  tokenLoadingState: 'Loading',
+  tokenError: null,
+  userInfoLoadingState: 'Loading',
+  userInfoLoadingError: null,
+  weatherLoadingState: 'Loading',
+  weatherLoadingError: null,
+  textColor: 'grey',
+  isOpen: false,
+  websocketArr: [],
+  webSocketStatus: false,
+  webSocketMessage: '',
+  webSocketSentMessage: ''
 };
 
 const stateSlice = createSlice({
@@ -16,21 +30,30 @@ const stateSlice = createSlice({
   initialState,
   reducers: {
     updateAll: (state, action) => {
-      state.type = action.payload.type;
+      state.weather = action.payload.weather;
       state.temp = action.payload.temp;
       state.zipcode = action.payload.zip;
       state.city = action.payload.city;
       state.url = action.payload.url;
       state.bg = action.payload.bg;
     },
-    updatePlaylist: (state, action) =>  {
-      state.playlist = action.payload;
+    updateUserAndEmail: (state, action) => {
+      state.userName = action.payload.userName;
+      state.email = action.payload.email;
     },
-    updateUser: (state, action) =>  {
-      state.userName = action.payload;
-    },
-    updateType: (state, action) => {
-      state.type = action.payload;
+    updateWeather: (state, action) => {
+      state.weather = action.payload;
+      if (action.payload === 'clouds') {
+        state.url = 'https://images.hdqwalls.com/wallpapers/sunny-fields.jpg';
+        state.playlist = '37i9dQZF1EIfv2exTKzl3M';
+      } else if (action.payload === 'clear') {
+        state.url = 'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';
+        state.playlist = '6VCXXQSDMXLYaHNaWPx11S';
+      } else if (action.payload === 'rain') {
+        state.url =
+          'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
+        state.playlist = '4ANPW38qMEYQ3Z1mVLrtmm';
+      }
     },
     updateTemp: (state, action) => {
       state.temp = action.payload;
@@ -41,12 +64,119 @@ const stateSlice = createSlice({
     updateCity: (state, action) => {
       state.city = action.payload;
     },
-    updateUrl: (state, action) => {
-      state.url = action.payload;
+    updateToken: (state, action) => {
+      state.token = action.payload;
+    },
+
+    // action payload
+    openModal: (state, action) => {
+      state.isOpen = true;
+    },
+    closeModal: (state, action) => {
+      state.isOpen = false;
+    },
+    updateWebSocket: (state, action) => {
+      state.websocketArr = action.payload;
+    },
+    updateWebSocketStatus: (state, action) => {
+      state.webSocketStatus = action.payload;
+    },
+    updatewebSocketMessage: (state, action) => {
+      state.webSocketMessage = action.payload;
+    },
+    updatewebSocketSentMessage: (state, action) => {
+      state.webSocketSentMessage = action.payload;
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchToken.pending, (state) => {
+        state.tokenLoadingState = 'Loading';
+        state.tokenError = null;
+      })
+      .addCase(fetchToken.fulfilled, (state, action) => {
+        state.tokenLoadingState = 'Succeeded';
+        state.token = action.payload.token;
+        state.tokenError = null;
+      })
+      .addCase(fetchToken.rejected, (state, action) => {
+        state.tokenLoadingState = 'Failed';
+        state.tokenError = action.error.message;
+      })
+      .addCase(fetchUserData.pending, (state) => {
+        state.userInfoLoadingState = 'Loading';
+        state.userInfoLoadingError = null;
+      })
+      .addCase(fetchUserData.fulfilled, (state, action) => {
+        state.userInfoLoadingState = 'Succeeded';
+        state.email = action.payload.email;
+        state.userName = action.payload.userName;
+        state.userInfoLoadingError = null;
+      })
+      .addCase(fetchUserData.rejected, (state, action) => {
+        state.userInfoLoadingState = 'Failed';
+        state.userInfoLoadingError = action.error.message;
+      })
+      .addCase(updateWeatherAPI.pending, (state) => {
+        state.weatherLoadingState = 'Loading';
+        state.weatherLoadingError = null;
+      })
+      .addCase(updateWeatherAPI.fulfilled, (state, action) => {
+        state.weatherLoadingState = 'Succeeded';
+        state.city = action.payload.city;
+        state.weather = action.payload.weather;
+        state.temp = action.payload.temp;
+        state.weatherLoadingError = null;
+
+        if (state.weather === 'clouds') {
+          state.url = 'https://images.hdqwalls.com/wallpapers/sunny-fields.jpg';
+          state.playlist = '37i9dQZF1EIfv2exTKzl3M';
+          state.textColor = 'white';
+        } else if (state.weather === 'clear') {
+          state.url =
+            'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';
+          state.playlist = '6VCXXQSDMXLYaHNaWPx11S';
+          state.textColor = 'grey';
+        } else if (state.weather === 'rain') {
+          state.url =
+            'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
+          state.playlist = '4ANPW38qMEYQ3Z1mVLrtmm';
+          state.textColor = 'white';
+        } else if (state.weather === 'mist') {
+          state.url =
+            'https://images.hdqwalls.com/wallpapers/marin-county-mist-morning-4k-5q.jpg';
+          state.playlist = '7x5aH9KMGYORlCF5lguQ9q';
+          state.textColor = 'grey';
+        } else if (state.weather === 'snow') {
+          state.url =
+            'https://images.hdqwalls.com/wallpapers/snowy-mountain-sunset-4q.jpg';
+          state.playlist = '4raqLXnmb8WYkjfed9olAR';
+          state.textColor = 'grey';
+        }
+      })
+      .addCase(updateWeatherAPI.rejected, (state, action) => {
+        state.weatherLoadingState = 'Failed';
+        state.weatherLoadingError = action.error.message;
+      });
   }
 });
 
-export const { updateType, updateTemp, updateZipcode, updateCity, updateUrl, updateAll, updateUser, updatePlaylist } =
-  stateSlice.actions;
+export const {
+  updateWeather,
+  updateTemp,
+  updateZipcode,
+  updateCity,
+  updateUrl,
+  updateAll,
+  updatePlaylist,
+  updateToken,
+  updateUserAndEmail,
+  openModal,
+  closeModal,
+  updateWebSocket,
+  updateWebSocketStatus,
+  updatewebSocketMessage,
+  updatewebSocketSentMessage
+} = stateSlice.actions;
+
 export default stateSlice.reducer;

@@ -2,42 +2,46 @@
 import React from 'react';
 import Logo from '../../public/logo.png';
 
-export default function Login(props) {
-  console.log('Login', props);
+export default function Login() {
   return (
-    <div class="hero-body">
-      <div class="container">
-        <div class="columns is-centered">
-          <div class="column is-5-tablet is-4-desktop is-4-widescreen">
-            <div class="card">
-              <div class="image is-64x64" />
+    <div className="hero-body">
+      <div className="container">
+        <div className="columns is-centered">
+          <div className="column is-12">
+            <div className="card">
+              <div className="image is-64x64" />
 
-              <div class="card-image">
-                <figure class="image">
+              <div className="card-image">
+                <figure className="image">
                   <img src={Logo} alt="Placeholder image" />
                 </figure>
               </div>
 
-              <div class="card-content">
-                <div class="content">
-                  <div class="field">
-                    <a class="button is-large is-success is-fullwidth" href="/auth/login">
+              <div className="card-content">
+                <div className="content">
+                  <div className="field">
+                    <a
+                      className="button is-large is-success is-fullwidth"
+                      href="/auth/login"
+                    >
                       Login
                     </a>
                   </div>
 
-                  <div class="field">
-                    <label class="label has-text-centered has-text-white">Forgot Password?</label>
+                  <div className="field" id="forgot-password">
+                    <label className="label has-text-centered has-text-white">
+                      Forgot Password?
+                    </label>
                   </div>
 
-                  <div class="field">
-                    <label class="label has-text-centered has-text-white">Sign Up</label>
+                  <div className="field" id="sign-up">
+                    <label className="label has-text-centered has-text-white">
+                      Sign Up
+                    </label>
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>
