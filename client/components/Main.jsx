@@ -6,6 +6,7 @@ import UserBox from './UserBox';
 import Icon from './Icon';
 import Player from './Player';
 import Login from './Login';
+import Chat from './Chat';
 import { updateZipcode } from '../redux/stateSlice';
 
 export default function Main() {
@@ -35,6 +36,13 @@ export default function Main() {
               <div className="content">
                 <div className="field">{!token ? <Login /> : <Player />}</div>
               </div>
+            </div>
+          </div>
+        </div>
+        <div id="chat" className="card">
+          <div className="card-content">
+            <div className="content">
+              <Chat />
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 export default function App() {
   const { url } = useSelector((state) => state.updater);
+
   return (
     <section
       id="app"

@@ -4,15 +4,55 @@ const path = require('path');
 const authRoutes = require('./routes/authRouter');
 const weatherRouter = require('./routes/weatherRouter');
 const cors = require('cors');
-const db = require('../database/database');
+// const db = require('../database/database');
+const ws = require('ws');
+const { v4: uuidv4 } = require('uuid');
 
 require('dotenv').config();
 
+//WEBSOCKET LOGIC.
 
+// Set up a headless websocket server that prints any
+// events that come in.
+//https://medium.com/hackernoon/https-medium-com-amanhimself-converting-a-buffer-to-json-and-utf8-strings-in-nodejs-2150b1e3de57
+//https://blog.logrocket.com/websocket-tutorial-real-time-node-react/
+//https://www.npmjs.com/package/ws
+
+const clients = {};
+
+function handleDisconnect(userId) {
+  const json = `${userId} disconnected.`;
+  delete clients[userId];
+  broadcastMessage(json);
+}
+
+function broadcastMessage(json) {
+  // We are sending the current data to all connected active clients
+  const data = JSON.stringify(json.toString('utf-8'));
+  for (let userId in clients) {
+    let client = clients[userId];
+    if (client.readyState === ws.OPEN) {
+      client.send(data);
+    }
+  }
+}
+
+const wsServer = new ws.Server({ noServer: true });
+wsServer.on('connection', (connection) => {
+  // connection.on('message', (message) => console.log(message.toString('utf8')));
+  const userId = uuidv4();
+  clients[userId] = connection;
+  console.log(`${userId} connected.`);
+
+  //Sending messages to all clients.
+  connection.on('message', (message) => broadcastMessage(message));
+
+  // User disconnected
+  connection.on('close', () => handleDisconnect(userId));
+});
 
 const app = express();
 const PORT = 3000;
-
 
 //Parsing JSON
 app.use(express.json());
@@ -65,9 +105,14 @@ app.use((err, req, res, next) => {
   console.log(errObj.log);
   return res.status(errObj.status).send(errObj.message);
 });
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`Server is running on port ${PORT}`);
+});
+server.on('upgrade', (request, socket, head) => {
+  wsServer.handleUpgrade(request, socket, head, (socket) => {
+    wsServer.emit('connection', socket, request);
+  });
 });
 
 module.exports = app;
