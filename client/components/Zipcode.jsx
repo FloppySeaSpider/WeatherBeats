@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateZipcode } from '../redux/stateSlice';
+import { updateWeather, updateZipcode } from '../redux/stateSlice';
 
 import { updateWeatherAPI } from '../redux/thunks';
 
@@ -10,9 +10,15 @@ import { updateWeatherAPI } from '../redux/thunks';
 
 export default function Zipcode() {
   const dispatch = useDispatch();
-  const { temp, city, weather, zipcode, textColor } = useSelector(
-    (state) => state.updater
-  );
+  const {
+    temp,
+    city,
+    weather,
+    zipcode,
+    textColor,
+    weatherLoadingState,
+    userName
+  } = useSelector((state) => state.updater);
 
   useEffect(() => {
     dispatch(updateWeatherAPI());
@@ -26,46 +32,56 @@ export default function Zipcode() {
         </div>
 
         <div className="field has-addons is-align-content-center is-justify-content-center">
-          <div className="has-icons-right is-expanded">
+          <div className="has-icons-right is-expanded is-size-4 is-loading is-large">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                localStorage.setItem('zipcode', zipcode);
                 dispatch(updateWeatherAPI());
               }}
             >
               <input
                 className="input has-text-weight-bold is-size-4"
                 type="text"
-                placeholder="ZIPCODE"
+                placeholder="Zipcode"
                 onChange={(e) => dispatch(updateZipcode(e.target.value))}
                 value={zipcode}
+                minLength="5"
+                maxLength="5"
+                required
               />
             </form>
           </div>
           <p className="control">
-            <a className="button is-primary has-text-weight-bold is-size-4 has-text-light">
-              Location
+            <a
+              className={`button is-primary has-text-weight-bold is-size-4 has-text-light ${
+                weatherLoadingState === 'Loading' ? 'is-loading' : ''
+              }`}
+            >
+              Submit
             </a>
           </p>
         </div>
 
-        <footer className="card-footer">
-          <p
-            className={`card-footer-item has-text-weight-bold is-size-4 has-text-${textColor} is-capitalized`}
-          >
-            {weather}
-          </p>
-          <p
-            className={`card-footer-item has-text-weight-bold is-size-4 has-text-${textColor} has-text-centered`}
-          >
-            {city}
-          </p>
-          <p
-            className={`card-footer-item has-text-weight-bold is-size-4 has-text-${textColor}`}
-          >
-            {`${temp}°F`}
-          </p>
-        </footer>
+        {weather && (
+          <footer className="card-footer">
+            <p
+              className={`card-footer-item has-text-weight-bold is-size-4 has-text-${textColor} is-capitalized`}
+            >
+              {weather}
+            </p>
+            <p
+              className={`card-footer-item has-text-weight-bold is-size-4 has-text-${textColor} has-text-centered`}
+            >
+              {city}
+            </p>
+            <p
+              className={`card-footer-item has-text-weight-bold is-size-4 has-text-${textColor}`}
+            >
+              {temp ? `${temp}°F` : ''}
+            </p>
+          </footer>
+        )}
       </div>
     </div>
   );

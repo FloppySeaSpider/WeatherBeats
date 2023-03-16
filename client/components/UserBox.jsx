@@ -1,6 +1,11 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateUserAndEmail, updateToken } from '../redux/stateSlice';
+import {
+  updateUserAndEmail,
+  updateToken,
+  updateWeather,
+  updateZipcode
+} from '../redux/stateSlice';
 
 export default function UserBox() {
   const { userName, email } = useSelector((state) => state.updater);
@@ -25,6 +30,9 @@ export default function UserBox() {
               onClick={() => {
                 dispatch(updateUserAndEmail({ email: null, userName: null }));
                 dispatch(updateToken(null));
+                dispatch(updateWeather(null));
+                dispatch(updateZipcode(''));
+                localStorage.clear();
               }}
               type="submit"
             >
