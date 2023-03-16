@@ -23,7 +23,7 @@ authRouter.get('/login', (req, res) => {
     response_type: 'code',
     redirect_uri: spotifyCallbackUrl,
     scope:
-      'user-read-email user-read-private streaming playlist-read-private playlist-read-collaborative',
+      'user-read-email user-read-private streaming playlist-read-private playlist-read-collaborative'
   };
   const urlSearchParams = new URLSearchParams(params);
   res.redirect(`${authUrl}?${urlSearchParams.toString()}`);
@@ -36,7 +36,7 @@ authRouter.get('/callback', async (req, res, next) => {
   const body = new URLSearchParams({
     grant_type: 'authorization_code',
     code: req.query.code,
-    redirect_uri: spotifyCallbackUrl,
+    redirect_uri: spotifyCallbackUrl
   });
 
   try {
@@ -44,14 +44,14 @@ authRouter.get('/callback', async (req, res, next) => {
     const { data } = await axios.post(tokenUrl, body.toString(), {
       headers: {
         Authorization: authHeader,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     });
     // stick it in an express session
     req.session.token = {
       accessToken: data.access_token,
       refreshToken: data.refresh_token,
-      tokenTimeStamp: Date.now(),
+      tokenTimeStamp: Date.now()
     };
 
     // example fetching data from spotify using axios
@@ -60,40 +60,28 @@ authRouter.get('/callback', async (req, res, next) => {
     // this time we use bearer token which make use of the oauth token
     const user = await axios.get(userUrl, {
       headers: {
-        Authorization: `Bearer ${req.session.token.accessToken}`,
-      },
+        Authorization: `Bearer ${req.session.token.accessToken}`
+      }
     });
 
     const userData = user.data;
 
-<<<<<<< HEAD
     //check if user exists in our database
-=======
-    // check if user exists in our database
->>>>>>> 2bcf973357f9ca7964445759eb57c476d89af10f
     const { email, display_name } = user.data;
 
     const query = 'SELECT * FROM user_table WHERE email_address = ?';
 
-<<<<<<< HEAD
     if (
       DB_PASSWORD !== undefined &&
       DB_PASSWORD !== null &&
       DB_PASSWORD !== ''
     ) {
-=======
-    if (DB_PASSWORD !== undefined && DB_PASSWORD !== null && DB_PASSWORD !== '') {
->>>>>>> 2bcf973357f9ca7964445759eb57c476d89af10f
       console.log('Searching the user in the database...');
       dbconnection.query(query, [email], (err, results, fields) => {
         if (err) {
           console.error('Error executing search query: ', err);
         }
-<<<<<<< HEAD
         //user doesn't exist, must add user info to the database
-=======
-        // user doesn't exist, must add user info to the database
->>>>>>> 2bcf973357f9ca7964445759eb57c476d89af10f
         if (results.length === 0) {
           console.log('No match found - inserting data into the data base');
           const toQuery = `INSERT INTO user_table (email_address, display_name) VALUES ('${email}', '${display_name}')`;
@@ -110,13 +98,9 @@ authRouter.get('/callback', async (req, res, next) => {
         }
       });
     } else {
-<<<<<<< HEAD
       console.log(
         'DB_PASSWORD was not provided in the .env file - skipping database functionality.'
       );
-=======
-      console.log('DB_PASSWORD was not provided in the .env file - skipping database functionality.');
->>>>>>> 2bcf973357f9ca7964445759eb57c476d89af10f
     }
 
     req.session.user = userData;
@@ -142,24 +126,24 @@ authRouter.get('/token', async (req, res) => {
         refresh_token: refreshToken,
         headers: {
           Authorization: `Basic ${Buffer.from(
-            `${spotifyClientId}:${spotifyClientSecret}`,
-          ).toString('base64')}`,
-        },
-      },
+            `${spotifyClientId}:${spotifyClientSecret}`
+          ).toString('base64')}`
+        }
+      }
     };
 
     try {
       console.log('Refreshing token...');
       const { data } = await axios.post(
         'https://accounts.spotify.com/api/token',
-        authData,
+        authData
       );
       const accessToken = data.access_token;
       res.session.token.accessToken = accessToken;
       res.session.token.refreshToken = refreshToken;
       res.session.token.tokenTimeStamp = Date.now();
       return res.status(200).json({
-        accessToken,
+        accessToken
       });
     } catch (error) {
       console.error('Failed to refresh token... ', error);
