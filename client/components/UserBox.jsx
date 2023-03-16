@@ -4,7 +4,8 @@ import {
   updateUserAndEmail,
   updateToken,
   updateWeather,
-  updateZipcode
+  updateZipcode,
+  openModal,
 } from '../redux/stateSlice';
 
 export default function UserBox() {
@@ -42,8 +43,8 @@ export default function UserBox() {
               type="submit"
               className="button is-primary is-small"
               onClick={() => {
-                dispatch(); 
-              }}  
+                dispatch(openModal());
+              }}
             >
               View Profile
             </button>

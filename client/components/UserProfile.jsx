@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from '@mdi/react';
-import { mdiHeartCircle } from '@mdi/js';
+import { mdiClockTimeFive } from '@mdi/js';
 import { useSelector, useDispatch } from 'react-redux';
 import ProfilePicture from '../../public/chick.png';
 
@@ -8,8 +8,8 @@ function UserProfile() {
   const { userName } = useSelector((state) => state.updater);
   const dispatch = useDispatch();
 
-  // QUERY DV FOR NAME AND USERNAME
-  const firstAndLastName = "FirstName"
+  // QUERY DB FOR NAME AND USERNAME
+  const firstAndLastName = 'FirstName';
   const userHandle = `@${userName}`;
   //
 
@@ -41,8 +41,8 @@ function UserProfile() {
         <div className="content">
 
           <div className="favSongsHeader">
-            <Icon path={mdiHeartCircle} size={1} />
-            Favorite Songs
+            <Icon path={mdiClockTimeFive} size={1} />
+            Last Three Zip Codes
           </div>
 
           <br />

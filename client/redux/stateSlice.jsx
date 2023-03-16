@@ -17,7 +17,8 @@ const initialState = {
   userInfoLoadingError: null,
   weatherLoadingState: 'Loading',
   weatherLoadingError: null,
-  textColor: 'grey'
+  textColor: 'grey',
+  isOpen: false,
 };
 
 const stateSlice = createSlice({
@@ -45,8 +46,7 @@ const stateSlice = createSlice({
         state.url = 'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';
         state.playlist = '6VCXXQSDMXLYaHNaWPx11S';
       } else if (action.payload === 'rain') {
-        state.url =
-          'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
+        state.url = 'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
         state.playlist = '4ANPW38qMEYQ3Z1mVLrtmm';
       }
     },
@@ -61,7 +61,15 @@ const stateSlice = createSlice({
     },
     updateToken: (state, action) => {
       state.token = action.payload;
-    }
+    },
+
+    // action payload
+    openModal: (state, action) => {
+      state.isOpen = true;
+    },
+    closeModal: (state, action) => {
+      state.isOpen = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -108,23 +116,19 @@ const stateSlice = createSlice({
           state.playlist = '37i9dQZF1EIfv2exTKzl3M';
           state.textColor = 'white';
         } else if (state.weather === 'clear') {
-          state.url =
-            'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';
+          state.url = 'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';
           state.playlist = '6VCXXQSDMXLYaHNaWPx11S';
           state.textColor = 'grey';
         } else if (state.weather === 'rain') {
-          state.url =
-            'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
+          state.url = 'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
           state.playlist = '4ANPW38qMEYQ3Z1mVLrtmm';
           state.textColor = 'white';
         } else if (state.weather === 'mist') {
-          state.url =
-            'https://images.hdqwalls.com/wallpapers/marin-county-mist-morning-4k-5q.jpg';
+          state.url = 'https://images.hdqwalls.com/wallpapers/marin-county-mist-morning-4k-5q.jpg';
           state.playlist = '7x5aH9KMGYORlCF5lguQ9q';
           state.textColor = 'grey';
         } else if (state.weather === 'snow') {
-          state.url =
-            'https://images.hdqwalls.com/wallpapers/snowy-mountain-sunset-4q.jpg';
+          state.url = 'https://images.hdqwalls.com/wallpapers/snowy-mountain-sunset-4q.jpg';
           state.playlist = '4raqLXnmb8WYkjfed9olAR';
           state.textColor = 'grey';
         }
@@ -133,7 +137,7 @@ const stateSlice = createSlice({
         state.weatherLoadingState = 'Failed';
         state.weatherLoadingError = action.error.message;
       });
-  }
+  },
 });
 
 export const {
@@ -145,6 +149,9 @@ export const {
   updateAll,
   updatePlaylist,
   updateToken,
-  updateUserAndEmail
+  updateUserAndEmail,
+  openModal,
+  closeModal,
 } = stateSlice.actions;
+
 export default stateSlice.reducer;
