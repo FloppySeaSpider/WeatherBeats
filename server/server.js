@@ -4,7 +4,6 @@ const path = require('path');
 const cors = require('cors');
 const authRoutes = require('./routes/authRouter');
 const weatherRouter = require('./routes/weatherRouter');
-const cors = require('cors');
 // const db = require('../database/database');
 const ws = require('ws');
 const { v4: uuidv4 } = require('uuid');
@@ -24,6 +23,8 @@ const clients = {};
 function handleDisconnect(userId) {
   const json = `${userId} disconnected.`;
   delete clients[userId];
+  //Let's not broadcast the disconnect string until we have unique users. Just use a different object that relates the username to the UUID.
+  //That way multiple people can have the same name.
   broadcastMessage(json);
 }
 
