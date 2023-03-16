@@ -74,7 +74,7 @@ authRouter.get('/callback', async (req, res, next) => {
     const query = 'SELECT * FROM user_table WHERE email_address = ?';
 
     if(DB_PASSWORD !== undefined && DB_PASSWORD !== null && DB_PASSWORD !== '') {
-      console.log("Executing query");
+      console.log("Searching the user in the database...");
       dbconnection.query(query, [email], (err, results, fields) => {
         if (err) {
           console.error('Error executing search query: ', err);
