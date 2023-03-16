@@ -9,7 +9,7 @@ function UserProfile() {
   const dispatch = useDispatch();
 
   // QUERY DB FOR NAME AND USERNAME
-  const firstAndLastName = 'FirstName';
+  const firstAndLastName = 'First Name';
   const userHandle = `@${userName}`;
   //
 
