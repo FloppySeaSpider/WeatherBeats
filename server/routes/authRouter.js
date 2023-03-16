@@ -16,7 +16,6 @@ const spotifyCallbackUrl = 'http://localhost:3000/auth/callback';
 
 authRouter.get('/', (req, res) => res.send('Auth Test'));
 authRouter.get('/login', (req, res) => {
-  console.log('Auth Logging In...');
   const authUrl = 'https://accounts.spotify.com/authorize';
   const params = {
     client_id: spotifyClientId,

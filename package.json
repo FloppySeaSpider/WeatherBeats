@@ -47,6 +47,7 @@
     "os": "^0.1.2",
     "path": "^0.12.7",
     "react": "^18.2.0",
+    "react-chat-widget": "^3.1.4",
     "react-dom": "^18.2.0",
     "react-modal": "^3.16.1",
     "react-redux": "^8.0.5",
@@ -55,9 +56,11 @@
     "react-spotify-web-playback": "^0.13.2",
     "react-spotify-web-playback-sdk": "^3.0.1",
     "react-use": "^17.4.0",
+    "react-use-websocket": "^4.3.1",
     "redux": "^4.2.1",
     "spotify-web-api-js": "^1.5.2",
-    "spotify-web-api-node": "^5.0.2"
+    "spotify-web-api-node": "^5.0.2",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",
@@ -76,6 +79,8 @@
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.7.3",
     "mysql": "^2.18.1",
+    "postcss": "^8.4.21",
+    "postcss-loader": "^7.1.0",
     "sass": "^1.59.2",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.1",

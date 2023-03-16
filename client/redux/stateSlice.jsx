@@ -19,6 +19,10 @@ const initialState = {
   weatherLoadingError: null,
   textColor: 'grey',
   isOpen: false,
+  websocketArr: [],
+  webSocketStatus: false,
+  webSocketMessage: '',
+  webSocketSentMessage: ''
 };
 
 const stateSlice = createSlice({
@@ -46,7 +50,8 @@ const stateSlice = createSlice({
         state.url = 'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';
         state.playlist = '6VCXXQSDMXLYaHNaWPx11S';
       } else if (action.payload === 'rain') {
-        state.url = 'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
+        state.url =
+          'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
         state.playlist = '4ANPW38qMEYQ3Z1mVLrtmm';
       }
     },
@@ -70,6 +75,18 @@ const stateSlice = createSlice({
     closeModal: (state, action) => {
       state.isOpen = false;
     },
+    updateWebSocket: (state, action) => {
+      state.websocketArr = action.payload;
+    },
+    updateWebSocketStatus: (state, action) => {
+      state.webSocketStatus = action.payload;
+    },
+    updatewebSocketMessage: (state, action) => {
+      state.webSocketMessage = action.payload;
+    },
+    updatewebSocketSentMessage: (state, action) => {
+      state.webSocketSentMessage = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -116,19 +133,23 @@ const stateSlice = createSlice({
           state.playlist = '37i9dQZF1EIfv2exTKzl3M';
           state.textColor = 'white';
         } else if (state.weather === 'clear') {
-          state.url = 'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';
+          state.url =
+            'https://images.hdqwalls.com/wallpapers/desert-road-aq.jpg';
           state.playlist = '6VCXXQSDMXLYaHNaWPx11S';
           state.textColor = 'grey';
         } else if (state.weather === 'rain') {
-          state.url = 'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
+          state.url =
+            'https://images.hdqwalls.com/wallpapers/scifi-city-rain-5k-xa.jpg';
           state.playlist = '4ANPW38qMEYQ3Z1mVLrtmm';
           state.textColor = 'white';
         } else if (state.weather === 'mist') {
-          state.url = 'https://images.hdqwalls.com/wallpapers/marin-county-mist-morning-4k-5q.jpg';
+          state.url =
+            'https://images.hdqwalls.com/wallpapers/marin-county-mist-morning-4k-5q.jpg';
           state.playlist = '7x5aH9KMGYORlCF5lguQ9q';
           state.textColor = 'grey';
         } else if (state.weather === 'snow') {
-          state.url = 'https://images.hdqwalls.com/wallpapers/snowy-mountain-sunset-4q.jpg';
+          state.url =
+            'https://images.hdqwalls.com/wallpapers/snowy-mountain-sunset-4q.jpg';
           state.playlist = '4raqLXnmb8WYkjfed9olAR';
           state.textColor = 'grey';
         }
@@ -137,7 +158,7 @@ const stateSlice = createSlice({
         state.weatherLoadingState = 'Failed';
         state.weatherLoadingError = action.error.message;
       });
-  },
+  }
 });
 
 export const {
@@ -152,6 +173,10 @@ export const {
   updateUserAndEmail,
   openModal,
   closeModal,
+  updateWebSocket,
+  updateWebSocketStatus,
+  updatewebSocketMessage,
+  updatewebSocketSentMessage
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

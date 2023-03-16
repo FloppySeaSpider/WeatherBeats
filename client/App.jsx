@@ -4,6 +4,7 @@ import Main from './components/Main';
 
 export default function App() {
   const { url } = useSelector((state) => state.updater);
+
   return (
     <section
       id="app"
