@@ -11,7 +11,7 @@ import Modal from './UserProfileModal';
 
 export default function Main() {
   const dispatch = useDispatch();
-  const { token, zipcode, isOpen } = useSelector((state) => state.updater);
+  const { token, isOpen } = useSelector((state) => state.updater);
 
   useEffect(() => {
     if (localStorage.getItem('zipcode')) { dispatch(updateZipcode(localStorage.getItem('zipcode'))); }

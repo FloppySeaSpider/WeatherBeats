@@ -5,7 +5,6 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRouter');
 const weatherRouter = require('./routes/weatherRouter');
 const db = require('../database/database');
-const databaseController = require('./controller/databaseController');
 
 require('dotenv').config();
 
@@ -38,7 +37,6 @@ app.use(express.static('public'));
 app.use('/auth', authRoutes);
 app.use('/api/weather', weatherRouter);
 
-// ADD BACK IN DB MIDDLE WARE
 app.get('/api/user', async (req, res, next) => {
   if (!req.session.user) {
     return res.status(401).json({ error: 'User not logged in' });
@@ -58,7 +56,7 @@ app.get('/api/user', async (req, res, next) => {
 
 // added catch
 app.use('*', (req, res) => res.sendStatus(404));
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   const template = {
     status: 500,
     message: 'Error in middleware',

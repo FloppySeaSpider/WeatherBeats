@@ -1,12 +1,11 @@
 import React from 'react';
 import Icon from '@mdi/react';
 import { mdiClockTimeFive } from '@mdi/js';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ProfilePicture from '../../public/chick.png';
 
 function UserProfile() {
   const { userName } = useSelector((state) => state.updater);
-  const dispatch = useDispatch();
 
   // QUERY DB FOR NAME AND USERNAME
   const firstAndLastName = 'First Name';
