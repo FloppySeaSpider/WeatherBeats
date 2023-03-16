@@ -32,7 +32,7 @@ function handleDisconnect(userId) {
   //Let's not broadcast the disconnect string until we have unique users. Just use a different object that relates the username to the UUID.
   //That way multiple people can have the same name.
   if (userName) {
-    const message = `${userName} disconnected.`;
+    const message = `${userName} has logged out.`;
     broadcastMessage(message);
   }
 }
