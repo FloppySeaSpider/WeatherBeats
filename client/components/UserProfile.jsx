@@ -1,61 +1,64 @@
 import React from 'react';
-import ProfilePicture from '../../public/chick.png'
 import Icon from '@mdi/react';
 import { mdiHeartCircle } from '@mdi/js';
+import { useSelector, useDispatch } from 'react-redux';
+import ProfilePicture from '../../public/chick.png';
 
 function UserProfile() {
+  const { userName } = useSelector((state) => state.updater);
+  const dispatch = useDispatch();
 
-    //QUERY DV FOR NAME AND USERNAME 
-    let firstAndLastName = "First Name"
-    let userHandle = "@username"
-    //
+  // QUERY DV FOR NAME AND USERNAME
+  const firstAndLastName = "FirstName"
+  const userHandle = `@${userName}`;
+  //
 
-    //QUERY DB FOR TOP 3 FAV SONGS
-    let favSongOne = "xxxxx"
-    let favSongTwo = "xxxxx"
-    let favSongThree = "xxxxx"
-    
-    return (
-        <div class="card">
-        {/* <div class="card-image">
+  // QUERY DB FOR TOP 3 FAV SONGS
+  const favSongOne = 'xxxxx';
+  const favSongTwo = 'xxxxx';
+  const favSongThree = 'xxxxx';
+
+  return (
+    <div className="card">
+      {/* <div class="card-image">
             <figure class="image is-4by3">
             <img src={ProfilePicture}alt="Placeholder image"/>
             </figure>
         </div> */}
-        <div class="card-content">
-            <div class="media">
-            <div class="media-left">
-                <figure class="image is-48x48">
-                <img src= {ProfilePicture} alt="Placeholder image"/>
-                </figure>
-            </div>
-            <div class="media-content">
-                <p class="title is-4">{firstAndLastName}</p>
-                <p class="subtitle is-6">{userHandle}</p>
-            </div>
-            </div>
-
-            <div class="content">
-            
-            <div class= "favSongsHeader">
-                <Icon path={mdiHeartCircle} size={1} />
-                Favorite Songs
-            </div>
-
-            <br/>
-         
-            {/* QUERY DB FOR TOP 3 FAV SONGS */}
-            <p1>{favSongOne}</p1>
-            <br/>
-            <p1>{favSongTwo}</p1>
-            <br/>
-            <p1>{favSongThree}</p1>
-            <br/>
-            
-            </div>
+      <div className="card-content">
+        <div className="media">
+          <div className="media-left">
+            <figure className="image is-48x48">
+              <img src={ProfilePicture} alt="user profile pic" />
+            </figure>
+          </div>
+          <div className="media-content">
+            <p className="title is-4">{firstAndLastName}</p>
+            <p className="subtitle is-6">{userHandle}</p>
+          </div>
         </div>
-        </div>
-    )
-}; 
 
-export default UserProfile; 
+        <div className="content">
+
+          <div className="favSongsHeader">
+            <Icon path={mdiHeartCircle} size={1} />
+            Favorite Songs
+          </div>
+
+          <br />
+
+          {/* QUERY DB FOR TOP 3 FAV SONGS */}
+          <p>{favSongOne}</p>
+          <br />
+          <p>{favSongTwo}</p>
+          <br />
+          <p>{favSongThree}</p>
+          <br />
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default UserProfile;
