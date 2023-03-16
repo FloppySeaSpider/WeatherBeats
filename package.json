@@ -27,6 +27,8 @@
   },
   "homepage": "https://github.com/Axolotl-Beats/WeatherBeats#readme",
   "dependencies": {
+    "@mdi/js": "^7.1.96",
+    "@mdi/react": "^1.6.1",
     "@reduxjs/toolkit": "^1.9.3",
     "axios": "^1.3.4",
     "body-parser": "^1.20.2",
@@ -46,6 +48,7 @@
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-modal": "^3.16.1",
     "react-redux": "^8.0.5",
     "react-spotify-embed": "^2.0.3",
     "react-spotify-playback-player": "^2.1.2",

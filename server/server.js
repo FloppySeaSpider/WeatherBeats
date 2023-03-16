@@ -1,22 +1,19 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+const cors = require('cors');
 const authRoutes = require('./routes/authRouter');
 const weatherRouter = require('./routes/weatherRouter');
-const cors = require('cors');
 const db = require('../database/database');
 
 require('dotenv').config();
 
-
-
 const app = express();
 const PORT = 3000;
 
-
-//Parsing JSON
+// Parsing JSON
 app.use(express.json());
-//Parsing URL encoded
+// Parsing URL encoded
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 // creating a session instance
@@ -29,9 +26,9 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       // secure true will only persist the cookie in https
-      secure: false
-    }
-  })
+      secure: false,
+    },
+  }),
 );
 
 app.use(express.static('public'));
@@ -40,28 +37,32 @@ app.use(express.static('public'));
 app.use('/auth', authRoutes);
 app.use('/api/weather', weatherRouter);
 
-app.get('/api/user', async (req, res) => {
+app.get('/api/user', async (req, res, next) => {
   if (!req.session.user) {
     return res.status(401).json({ error: 'User not logged in' });
   }
-  const { display_name, email, href } = req.session.user;
+  const {
+    display_name, email, href, userDetails,
+  } = req.session.user;
+
   const data = {
     display_name,
     email,
-    href
+    href,
+    userDetails,
   };
   return res.status(200).json(data);
 });
 
 // added catch
 app.use('*', (req, res) => res.sendStatus(404));
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   const template = {
     status: 500,
     message: 'Error in middleware',
-    log: 'Error in middleware'
+    log: 'Error in middleware',
   };
-  const errObj = Object.assign({}, template, err);
+  const errObj = { ...template, ...err };
   console.log(errObj.log);
   return res.status(errObj.status).send(errObj.message);
 });

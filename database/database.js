@@ -1,31 +1,31 @@
-//CONNECTING TO OUR DATABASE
+// CONNECTING TO OUR DATABASE
 require('dotenv').config();
-const mysql = require("mysql");
+const mysql = require('mysql');
 
-const DB_PASSWORD = process.env.DB_PASSWORD;
+const { DB_PASSWORD } = process.env;
 
-var connection = mysql.createConnection({
+const connection = mysql.createConnection({
   host: 'weatherbeatsdb.cxqjdq6uqtfw.us-east-2.rds.amazonaws.com',
-  user: "admin",
+  user: 'admin',
   password: DB_PASSWORD,
-  port: "3306",
-  database: "weatherbeats",
+  port: '3306',
+  database: 'weatherbeats',
 });
 
-connection.connect(function (err) {
+connection.connect((err) => {
   if (err) {
-    console.error("Database connection failed: " + err.stack);
+    console.error(`Database connection failed: ${err.stack}`);
     return;
   }
 
-  console.log("Connected to database.");
-  connection.query("SHOW TABLES", (err, results) => {
+  console.log('Connected to database.');
+  connection.query('SHOW TABLES', (err, results) => {
     if (err) {
-      console.log("error");
-      console.error("Error executing query: " + err.stack);
+      console.log('error');
+      console.error(`Error executing query: ${err.stack}`);
       return;
     }
-    console.log("Tables in database:");
+    console.log('Tables in database:');
     results.forEach((result) => {
       console.log(result.Tables_in_weatherbeats);
     });

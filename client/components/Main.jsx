@@ -7,14 +7,14 @@ import Icon from './Icon';
 import Player from './Player';
 import Login from './Login';
 import { updateZipcode } from '../redux/stateSlice';
+import Modal from './UserProfileModal';
 
 export default function Main() {
   const dispatch = useDispatch();
-  const { token, zipcode } = useSelector((state) => state.updater);
+  const { token, isOpen } = useSelector((state) => state.updater);
 
   useEffect(() => {
-    if (localStorage.getItem('zipcode'))
-      dispatch(updateZipcode(localStorage.getItem('zipcode')));
+    if (localStorage.getItem('zipcode')) { dispatch(updateZipcode(localStorage.getItem('zipcode'))); }
     dispatch(fetchUserData());
   }, []);
 
@@ -25,6 +25,7 @@ export default function Main() {
           {token && <Icon />}
           <Zipcode />
           {token && <UserBox />}
+          {isOpen && <Modal />}
         </div>
       </div>
 
