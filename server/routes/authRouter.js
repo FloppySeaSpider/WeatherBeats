@@ -66,34 +66,19 @@ authRouter.get('/callback', async (req, res, next) => {
 
     const userData = user.data;
 
-<<<<<<< HEAD
     //check if user exists in our database
-=======
-    // check if user exists in our database
->>>>>>> 2bcf973357f9ca7964445759eb57c476d89af10f
+
     const { email, display_name } = user.data;
 
     const query = 'SELECT * FROM user_table WHERE email_address = ?';
-
-<<<<<<< HEAD
-    if (
-      DB_PASSWORD !== undefined &&
-      DB_PASSWORD !== null &&
-      DB_PASSWORD !== ''
-    ) {
-=======
     if (DB_PASSWORD !== undefined && DB_PASSWORD !== null && DB_PASSWORD !== '') {
->>>>>>> 2bcf973357f9ca7964445759eb57c476d89af10f
       console.log('Searching the user in the database...');
       dbconnection.query(query, [email], (err, results, fields) => {
         if (err) {
           console.error('Error executing search query: ', err);
         }
-<<<<<<< HEAD
         //user doesn't exist, must add user info to the database
-=======
-        // user doesn't exist, must add user info to the database
->>>>>>> 2bcf973357f9ca7964445759eb57c476d89af10f
+
         if (results.length === 0) {
           console.log('No match found - inserting data into the data base');
           const toQuery = `INSERT INTO user_table (email_address, display_name) VALUES ('${email}', '${display_name}')`;
@@ -110,13 +95,10 @@ authRouter.get('/callback', async (req, res, next) => {
         }
       });
     } else {
-<<<<<<< HEAD
       console.log(
         'DB_PASSWORD was not provided in the .env file - skipping database functionality.'
       );
-=======
-      console.log('DB_PASSWORD was not provided in the .env file - skipping database functionality.');
->>>>>>> 2bcf973357f9ca7964445759eb57c476d89af10f
+
     }
 
     req.session.user = userData;
